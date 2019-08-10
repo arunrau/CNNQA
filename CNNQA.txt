@@ -1,0 +1,28 @@
+python setup.py build
+python setup.py install
+
+pip install labelImg
+labelImg
+
+python parse_xml_to_csv.py
+
+Create a train record file.
+python create_tf_record.py --csv_input=train_labels.csv --image_dir=train --output_path=train.record
+
+create a test record file
+python create_tf_record.py --csv_input=test_labels.csv --image_dir=test --output_path=test.record
+
+fine_tune_checkpoint : set path to /TensorflowModels/models/research/object_detection/faster_rcnn_inception_v2_coco_2018_01_28/model.ckpt(or to model.ckpt of any base model that you use)
+input_path(train_input_reader) : in train_input_reader block set input_path to /TensorflowModels/models/research/object_detection/train.record file
+label_map_path(train_input_reader) : in train_input_reader block set path to /TensorflowModels/models/research/object_detection/training/labelmap.pbtxt
+num_examples : set the number to number of test images you will be using
+input_path(eval_input_reader) : in eval_input_reader block set input_path to /TensorflowModels/models/research/object_detection/test.record file
+label_map_path(eval_input_reader) : in eval_input_reader block set path to /TensorflowModels/models/research/object_detection/training/labelmap.pbtxt
+
+
+python train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/faster_rcnn_inception_v2_arunrauQA.config
+
+
+python test_model.py \TensorflowModels\models\research\object_detection\DUT_QA.jpg --textual --with_image
+
+
